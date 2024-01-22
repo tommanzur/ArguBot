@@ -1,10 +1,5 @@
 # ArguBot: Chatbot for Sociotechnical Argument Analysis
 
-## Overview
-
-# Detailed Presentation of the ArguBot Project (Translated into English)
-
-## ArguBot: An Innovative Tool
 ArguBot is a unique chatbot based on the doctoral thesis "Construction of Arguments and Socio-Technical Controversies" by Tomás Manzur. It offers interactive access to the thesis's insights on the Plan Provincial de Ordenamiento Territorial of Mendoza.
 
 ArguBot is a chatbot designed to explore and facilitate understanding of the complexities presented in the thesis. It allows users to interact with the contents of the research, providing access to detailed information and analysis of the arguments and socio-technical controversies linked to the PPOT.
