@@ -9,17 +9,25 @@
         <!-- Agregar un título con el nombre del chatbot -->
         <h1 class="text-center">ArguBot Chat Interface</h1>
         <!-- Agregar un cuadro de texto con las instrucciones de uso -->
-        <p class="text-center">Bienvenido a ArguBot, el chatbot interactivo diseñado para ayudarte 
+        <p class="text-center">
+            <p>
+            Bienvenido a ArguBot, el chatbot interactivo diseñado para ayudarte 
             a explorar los temas cubiertos en la tesis doctoral de Tomás Manzur sobre 
             "Construcción de Argumentos y Controversias Socio-Técnicas",
             enfocándose en el Plan Provincial de Ordenamiento Territorial de Mendoza.
+            </p>
+            <p>
             Como usuario, tienes la oportunidad de adentrarte en varios aspectos de esta tesis, 
             incluyendo las complejidades de la planificación territorial, 
             la dinámica de las controversias socio-técnicas y un análisis detallado de argumentación. 
             Ya seas estudiante, investigador o simplemente alguien interesado en estos temas,
             ArguBot está aquí para guiarte a través de los contenidos y hallazgos de la tesis.
+            </p>
+            <p>
             Para empezar, escribe tu mensaje 
-            en el cuadro de abajo y presiona el botón de enviar.</p>
+            en el cuadro de abajo y presiona el botón de enviar.
+            </p>
+        </p>
         <div id="chat-messages" class="mb-3"></div>
         <div class="input-group mb-3">
                 <input type="text" id="user-input" class="form-control" placeholder="Escribe tu mensaje...">
@@ -31,24 +39,33 @@
 
     <script>
         function sendMessage() {
-            const userInput = document.getElementById("user-input").value;
-            appendMessage("user", userInput);
-    
+            // Se ignora lo que el usuario haya ingresado y se establece el mensaje específico
+            const fixedMessage = "hola, me explicas que dice la tesis de Tomás Manzur?";
+
+            appendMessage("user", fixedMessage);
+
+            // El objeto dataToSend contiene el mensaje fijo
+            const dataToSend = {
+                message: fixedMessage
+            };
+
             fetch("http://127.0.0.1:5000/chat", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "*/*",
                 },
-                body: JSON.stringify({ message: userInput }),
+                message: JSON.stringify(dataToSend),
             })
             .then(response => response.json())
             .then(data => {
-                appendMessage("assistant", data.response); // Cambiar 'data.message' por 'data.response'
+                appendMessage("assistant", data.response);
             })
             .catch(error => console.error("Error:", error));
-    
+
+            // Se limpia el campo de entrada, pero esto no afecta el mensaje enviado
             document.getElementById("user-input").value = "";
         }
+
 
         function appendMessage(role, content) {
             const chatMessages = document.getElementById("chat-messages");

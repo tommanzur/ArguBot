@@ -53,7 +53,6 @@ query_engine.update_prompts(
 def chat():
     user_input = request.json['message']
     response = query_engine.query(user_input)
-    print(str(response))
     return str(response)
 
 if __name__ == '__main__':
