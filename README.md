@@ -52,4 +52,5 @@ In ArguBot, users can engage in a variety of interactions to explore the thesis'
 - **Questions about Specific Findings:**
     - User: "What were some key findings about water usage in Mendoza?"
     - ArguBot: "One key finding is that water usage is a central element in territorial disputes, reflecting underlying power dynamics and revealing how water scarcity shapes social and economic activities."
+    
 These examples showcase ArguBot's ability to provide informative and context-specific responses, making it an effective tool for engaging with the thesis's complex themes.
