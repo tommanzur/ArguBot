@@ -1,24 +1,20 @@
 import chromadb
-import requests
 from llama_index.llms import Gemini
 from llama_index import SimpleDirectoryReader, VectorStoreIndex
-from llama_index.response.notebook_utils import display_response
 from llama_index.vector_stores import ChromaVectorStore
 from llama_index.embeddings import HuggingFaceEmbedding
 from llama_index.storage.storage_context import StorageContext
 from llama_index.service_context import ServiceContext
 from llama_index.prompts import PromptTemplate
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='src', static_url_path='')
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-base-en-v1.5")
-
-with requests.get('https://drive.google.com/file/d/1iFHzW_QO_f6LJzBiOB5ZM7taxAvf7Jgr/view?usp=drive_link', stream=True) as r:
-    r.raise_for_status()
-    with open('documents/data.txt', 'wb') as f:
-        for chunk in r.iter_content(chunk_size=8192):
-            f.write(chunk)
 
 documents = SimpleDirectoryReader('./documents').load_data()
 
@@ -53,6 +49,7 @@ query_engine.update_prompts(
 def chat():
     user_input = request.json['message']
     response = query_engine.query(user_input)
+    print(response)
     return str(response)
 
 if __name__ == '__main__':
