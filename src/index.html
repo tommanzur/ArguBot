@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image" href="./static/rob.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+    <!-- Chatbot Description -->
+    <div class="section">
+        <h1>ArguBot</h1>
+        <p class="p-2">
+        Bienvenido a ArguBot, el chatbot interactivo diseñado para ayudarte 
+        a explorar los temas cubiertos en la tesis doctoral de Tomás Manzur sobre 
+        "Construcción de Argumentos y Controversias Socio-Técnicas",
+        enfocándose en el Plan Provincial de Ordenamiento Territorial de Mendoza.
+        </p>
+        <p class="p-2">
+        Como usuario, tienes la oportunidad de adentrarte en varios aspectos de esta tesis, 
+        incluyendo las complejidades de la planificación territorial, 
+        la dinámica de las controversias socio-técnicas y un análisis detallado de argumentación. 
+        Ya seas estudiante, investigador o simplemente alguien interesado en estos temas,
+        ArguBot está aquí para guiarte a través de los contenidos y hallazgos de la tesis.
+        </p>
+        <p class="p-2">
+        Para empezar, escribe tu mensaje 
+        en el cuadro de abajo y presiona el botón de enviar.
+        </p>
+        <p class="p-2">
+            <iframe src="./static/tesis.pdf" width="1000" height="500" style="padding: 2;"></iframe>
+        </p>
+    </div>
+
+    <!-- Button to Open the Chatbot -->
+    <button id="open-chatbot" class="open-chatbot-button"><img src="./static/rob.png" alt="bot icon" class="w-8 h-8 rounded-md"></button>
+
+    <!-- Chatbot Pop-up -->
+    <div id="chatbot-popup" class="chatbot-popup">
+        <!-- Pop-up Close Button -->
+        <span class="close-button" id="close-chatbot">&times;</span>
+
+        <div class="p-2 bg-gemRegular flex gap-5 items-center">
+            <img src="./static/rob.png" alt="chatbot image" class="w-10 h-10 rounded-md"/>
+            <h1 class="text-gemDeep text-lg font-medium">Chatbot</h1>
+        </div>
+        
+        <!-- Chat Area -->
+        <div id="chat-container" class="chat-container">
+            <!-- Chat messages will appear here -->
+        </div>
+
+        <!-- Text Input Box -->
+        <form action="" method="post" class="chat-form p-2" id="chat-form">
+            <textarea
+                name="prompt"
+                id="prompt"
+                cols="30"
+                rows="2"
+                class="w-full p-2 rounded-md resize-none focus:outline-none"
+                style="background: rgb(255, 255, 255); border: 1px solid grey; color: rgb(31,31,31);"
+                placeholder="Realiza tu consulta..."
+            ></textarea>
+            <button type="submit" class="w-full p-1 bg-gemDeep rounded text-white">
+                Send
+            </button>
+        </form>
+    </div>
+    <script>
+
+let history = [];
+
+async function getResponse(prompt) {
+  const response = await fetch('http://127.0.0.1:5000/chat', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: prompt })
+  });
+
+  if (!response.ok) {
+    console.error('Error en la respuesta del servidor');
+    return "Lo siento, hubo un error al procesar tu mensaje.";
+  }
+
+  const data = await response.text();
+  return data;
+}
+
+// User chat div
+const userDiv = (data) => {
+  return `
+  <!-- User Chat -->
+          <div class="flex items-center gap-2 justify-start m-2">
+            <img src="./static/human.png" alt="user icon" class="w-10 h-10 rounded-full"/>
+            <div class="bg-gemDeep text-white p-1 rounded-md shadow-md mx-2">${data}</div>
+          </div>
+  `;
+};
+
+// AI Chat div
+const aiDiv = (data) => {
+  return `
+  <!-- AI Chat -->
+          <div class="flex gap-2 justify-end m-2">
+            <div class="bg-gemDeep text-white p-1 rounded-md shadow-md mx-2">${data}</div>
+            <img src="./static/bot.png" alt="bot icon" class="w-10 h-10 rounded-full"/>
+          </div>
+  `;
+};
+
+async function handleSubmit(event) {
+  event.preventDefault();
+
+  let userMessage = document.getElementById("prompt");
+  const chatArea = document.getElementById("chat-container");
+
+  var prompt = userMessage.value.trim();
+  if (prompt === "") {
+    return;
+  }
+
+  console.log("user message", prompt);
+
+  chatArea.innerHTML += userDiv(prompt);
+  userMessage.value = "";
+  const aiResponse = await getResponse(prompt);
+  chatArea.innerHTML += aiDiv(aiResponse);
+
+  let newUserRole = {
+    role: "user",
+    parts: prompt,
+  };
+  let newAIRole = {
+    role: "model",
+    parts: aiResponse,
+  };
+
+  history.push(newUserRole);
+  history.push(newAIRole);
+
+  console.log(history);
+}
+
+const chatForm = document.getElementById("chat-form");
+chatForm.addEventListener("submit", handleSubmit);
+
+chatForm.addEventListener("keyup", (event) => {
+  if (event.keyCode === 13) handleSubmit(event);
+});
+
+// Get the elements
+const chatbotPopup = document.getElementById('chatbot-popup');
+const openChatbotButton = document.getElementById('open-chatbot');
+
+// Event to open the chatbot
+openChatbotButton.addEventListener('click', () => {
+    chatbotPopup.style.display = 'block';
+});
+
+const closeChatbotButton = document.getElementById('close-chatbot');
+
+// Event to close the chatbot
+closeChatbotButton.addEventListener('click', () => {
+    chatbotPopup.style.display = 'none';
+});
+
+    </script>
+</body>
+</html>
