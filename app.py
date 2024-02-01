@@ -33,7 +33,7 @@ index = VectorStoreIndex.from_documents(
 query_engine = index.as_query_engine()
 
 template = (
-    "Dado el contexto que te proporcionare responde las preguntas \n"
+    "Dado el contexto que te proporcionare responde las preguntas sobre la tesis doctoral de Tomás Manzur.\n"
     "Contexto:\n"
     "################################\n"
     "{context_str}"
